@@ -75,8 +75,9 @@ export default class List extends LightningElement {
         this.template.querySelector('c-details').openModalDetails(data);
     }
 
-    openCreate(data){
-        this.template.querySelector('c-create').create();
+    openCreateComponent(){
+        console.log('create');
+        this.template.querySelector('c-create').openModalCreate();
     }
   
 }

@@ -3,11 +3,9 @@ export default class Create extends LightningElement {
     @track modalContainer = false;
 
     @api
-    create(){
+    openModalCreate(){
         this.modalContainer = true;
         // call api create controller
-        this.modalContainer=false;
-
     }
 
     closeModalAction(){

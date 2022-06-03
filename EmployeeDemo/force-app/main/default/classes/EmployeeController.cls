@@ -17,7 +17,8 @@ public with sharing class EmployeeController {
             FullName__c,
             LastName__c,
             Phone_number__c,
-            Position__c
+            Position__c,
+            No__c
             FROM Employee__c
             LIMIT 10
         ];

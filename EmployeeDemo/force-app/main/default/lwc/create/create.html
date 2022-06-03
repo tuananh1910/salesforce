@@ -14,6 +14,7 @@
                    <lightning-card>
                         <lightning-record-form 
                             object-api-name="Employee__c"
+                            key-field ='id'
                             onsuccess={create}
                             oncancel={closeModalAction}
                             layout-type = 'full'
