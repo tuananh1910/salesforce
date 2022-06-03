@@ -11,12 +11,12 @@
 
                  <div class="slds-modal__content slds-p-around_medium">
                    <lightning-card>
-                        <lightning-record-view-form
-                            record-id={detailsEmployee.Id}
-                            object-api-name="Employee__c"
-                            layout-type = 'full'
-                        >
-                        </lightning-record-view-form>
+                    <lightning-record-view-form
+                    object-api-name={detailsEmployee}
+                    record-id={detailsEmployee.id}
+                >
+                    <lightning-output-field field-name={FullName__c}> </lightning-output-field>
+                </lightning-record-view-form>
                     </lightning-card>
                  </div>
                  <footer class="slds-modal__footer">

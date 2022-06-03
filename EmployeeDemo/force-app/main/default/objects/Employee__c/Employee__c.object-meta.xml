@@ -155,8 +155,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Employee</label>
     <nameField>
+        <displayFormat>E-{0000}</displayFormat>
         <label>Employee Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Employees</pluralLabel>
     <searchLayouts></searchLayouts>

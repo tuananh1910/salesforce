@@ -11,9 +11,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Member</fullName>
+                <fullName>Fresher</fullName>
                 <default>false</default>
-                <label>Member</label>
+                <label>Fresher</label>
             </value>
             <value>
                 <fullName>Leader</fullName>

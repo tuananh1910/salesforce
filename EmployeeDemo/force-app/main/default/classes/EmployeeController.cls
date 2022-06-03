@@ -10,13 +10,13 @@ public with sharing class EmployeeController {
             SELECT 
             Age__c,
             Certifications__c,
-            DateOfBirth__c,
+            Date_of_Birth__c,
             Email__c,
             Experience__c,
             FirstName__c,
             FullName__c,
             LastName__c,
-            PhoneNumber__c,
+            Phone_number__c,
             Position__c
             FROM Employee__c
             LIMIT 10
