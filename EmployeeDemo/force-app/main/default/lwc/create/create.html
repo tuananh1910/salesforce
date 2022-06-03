@@ -1,0 +1,29 @@
+<template>
+    <template if:true={modalContainer}>
+        <p>Create</p>
+        <section  class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalAction}>
+                       <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Create</h2>
+                 </header>
+
+                 <div class="slds-modal__content slds-p-around_medium">
+                   <lightning-card>
+                        <lightning-record-form 
+                            object-api-name="Employee__c"
+                            onsuccess={create}
+                            oncancel={closeModalAction}
+                            layout-type = 'full'
+                        >
+
+                        </lightning-record-form>
+                    </lightning-card>
+                 </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

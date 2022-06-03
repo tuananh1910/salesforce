@@ -1,0 +1,32 @@
+<template>
+    <div style="height: 300px; width:100%">
+        <h1 class="title-table">LIST EMPLOYEE</h1>
+        <div>
+            <lightning-button 
+                variant="brand" 
+                label="Create" 
+                title="Create action" 
+                onclick={openCreate}
+                class="slds-m-left_x-small"
+            >
+            </lightning-button>     
+        </div>
+        <template if:true={employees}>
+            <lightning-datatable
+                key-field="id"
+                data={employees}
+                show-row-number-column
+                suppress-bottom-bar
+                columns={columns}
+                onrowaction={handleRowAction}>
+        </lightning-datatable>
+        </template>
+
+        <template if:true={error}>
+            <p>E</p>
+        </template> 
+    </div>
+
+    <c-details></c-details>
+    <c-create></c-create>
+</template>

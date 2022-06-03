@@ -1,0 +1,32 @@
+<template>
+    <div style="height: 300px;">
+        <h1 class="title-table">LIST JOB POSTING SITE</h1>
+        <div>
+            <lightning-button 
+                variant="brand" 
+                label="Create" 
+                title="Create action" 
+                onclick={openCreate}
+                class="slds-m-left_x-small"
+            >
+            </lightning-button>     
+        </div>
+        <template if:true={jobPostingSites}>
+            <lightning-datatable
+                key-field="id"
+                data={jobPostingSites}
+                show-row-number-column
+                suppress-bottom-bar
+                columns={columns}
+                onrowaction={handleRowAction}>
+        </lightning-datatable>
+        </template>
+
+        <template if:true={error}>
+            <p>Not Found</p>
+        </template> 
+    </div>
+
+    <c-details></c-details>
+    <c-create></c-create>
+</template>

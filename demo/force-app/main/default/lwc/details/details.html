@@ -1,0 +1,45 @@
+<template>
+    <p>Details</p>
+    <template if:true={modalContainer}>
+        <section  class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalAction}>
+                       <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">{detailJobPostingSite.Name} Detail</h2>
+                 </header>
+
+                 <div class="slds-modal__content slds-p-around_medium">
+                   <lightning-card>
+                        <lightning-record-view-form
+                            record-id={detailJobPostingSite.Id}
+                            object-api-name="Job_Posting_Site__c"
+                        >
+                            <div class="slds-box">
+                                <lightning-output-field field-name="Name">
+                                </lightning-output-field>
+                                <lightning-output-field field-name="Description__c">
+                                </lightning-output-field>
+                                <lightning-output-field field-name="Job_Posting_Site_URL__c">
+                                </lightning-output-field>
+                                <lightning-output-field field-name="Status__c">
+                                </lightning-output-field>
+                                <lightning-output-field field-name="Technical_Site__c">
+                                </lightning-output-field>
+                                
+                            </div>
+                        </lightning-record-view-form>
+                    </lightning-card>
+                 </div>
+                 <footer class="slds-modal__footer">
+                    <lightning-button variant="brand" label="Close" title="Close"  onclick={closeModalAction}></lightning-button>
+               </footer> 
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:false={modalContainer}>
+        HAVE A ERROR :v
+    </template>
+</template>
