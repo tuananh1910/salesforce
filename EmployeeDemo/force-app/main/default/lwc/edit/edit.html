@@ -1,0 +1,58 @@
+<template>
+    <template if:true={modalContainer}>
+        <p>Edit</p>
+        <section  class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalAction}>
+                       <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Edit</h2>
+                 </header>
+
+                 <div class="slds-modal__content slds-p-around_medium">
+                   <lightning-card>
+                        <lightning-record-edit-form 
+                            object-api-name="Employee__c"
+                            record-id={editEmployee.Id}
+                        >
+
+                        <lightning-input-field field-name="FirstName__c"> </lightning-input-field>
+                        <lightning-input-field field-name="LastName__c"> </lightning-input-field>
+                        <!-- <lightning-output-field field-name="FullName__c"> </lightning-output-field> -->
+                        <lightning-input-field field-name="Date_of_Birth__c"> </lightning-input-field>
+                        <!-- <lightning-output-field field-name="Age__c"> </lightning-output-field> -->
+
+                        <lightning-input-field field-name="Email__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Phone_number__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Certifications__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Experience__c"> </lightning-input-field>
+                        <lightning-input-field field-name="Position__c"> </lightning-input-field>
+                        
+                        <!-- <lightning-button
+                            class="slds-m-top_small"
+                            variant="brand"
+                            type="submit"
+                            name="cancel"
+                            label="Cancel"
+                            onclick={closeModalAction}
+                        >
+                        </lightning-button> -->
+                        <lightning-button
+                            class="slds-m-top_small"
+                            variant="brand"
+                            type="submit"
+                            name="update"
+                            label="Update"
+                            onclick={finish}
+                            
+                        >
+                        </lightning-button>
+                        </lightning-record-edit-form>
+                    </lightning-card>
+                 </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

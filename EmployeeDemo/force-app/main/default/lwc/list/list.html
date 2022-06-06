@@ -1,12 +1,12 @@
 <template>
-    <div style="height: 300px; width:100%">
+    <div style="height: 300px; width:100%; ">
         <h1 class="title-table">LIST EMPLOYEE</h1>
         <div>
             <lightning-button 
                 variant="brand" 
                 label="Create" 
                 title="Create action" 
-                onclick={openCreateComponent}
+                onclick={openCreate}
                 class="slds-m-left_x-small"
             >
             </lightning-button>     
@@ -18,8 +18,12 @@
                 show-row-number-column
                 suppress-bottom-bar
                 columns={columns}
-                onrowaction={handleRowAction}>
+                onrowaction={handleRowAction}
+                onrowselection = {handeSelect}
+                >
+                
         </lightning-datatable>
+                
         </template>
 
         <template if:true={error}>
@@ -28,6 +32,6 @@
     </div>
 
     <c-details></c-details>
-    <c-create></c-create>
-    
+    <c-create if:true={checkOpenCreate} onchangeopen={turnOffCreate}></c-create>
+    <c-edit if:true={checkOpenEdit} onchangeopen={turnOffEdit}></c-edit>
 </template>

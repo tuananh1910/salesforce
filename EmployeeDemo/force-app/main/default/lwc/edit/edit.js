@@ -1,10 +1,13 @@
 import { api, LightningElement, track } from 'lwc';
-export default class Create extends LightningElement {
+
+export default class Edit extends LightningElement {
     @track modalContainer = false;
+    editEmployee;
 
     @api
-    openModalCreate(){
+    openModalEdit(data){
         this.modalContainer = true;
+        this.editEmployee = data;
     }
 
     closeModalAction(){
@@ -12,8 +15,9 @@ export default class Create extends LightningElement {
     }
     
     finish(){
+        this.template.querySelector('lightning-record-edit-form').submit(this.fields);
         const customEvent = new CustomEvent('changeopen');
         this.dispatchEvent(customEvent);
+        this.closeModalAction();
     }
-
 }
