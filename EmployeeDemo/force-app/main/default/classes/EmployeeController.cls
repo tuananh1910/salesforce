@@ -46,7 +46,7 @@ public with sharing class EmployeeController {
         Position__c,
         No__c
         From Employee__c
-        WHERE name LIKE : searchKeyword]){
+        WHERE FullName__c LIKE : searchKeyword]){
            ems.add(emObj);
         }
         

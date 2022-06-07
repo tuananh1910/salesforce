@@ -7,7 +7,7 @@ const DELAY = 300;
 export default class Pagination extends LightningElement {
     
     @api records;
-    @api recordsToDisplay
+    @api recordsToDisplay;
     @api recordsperpage;
 
     totalRecords;

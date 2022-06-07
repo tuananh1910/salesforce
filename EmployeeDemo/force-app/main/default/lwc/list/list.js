@@ -73,6 +73,13 @@ export default class List extends LightningElement {
         this.recordsToDisplay = event.detail.records;
     } 
 
+    handleSearch(event){
+        window.console.log(JSON.stringify(event.detail.records));
+        // have records , set recordsToDisplay = result
+        // if result more recordsperpage ? pagination : nothing
+    }
+
+
     @wire(getAllEmployees) getData(response){
         this.wiredEmployeeList = response;
         if(response.data){
@@ -217,4 +224,5 @@ export default class List extends LightningElement {
         })
     }
 
+    
 }
