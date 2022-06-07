@@ -1,24 +1,4 @@
 <template>
-    <div class="slds-m-top_small"></div>
-        <div class="slds-m-aroung_small">
-        <template if:true={showTable}>
-            <lightning-datatable
-                key-field="Id"
-                data={recordsToDisplay}
-                show-row-number-column="false"
-                hide-checkbox-column
-                columns={columns}
-                onrowaction={handleRowAction}
-                default-sort-direction={defaultSortDirection}
-                sorted-direction={sortDirection}
-                sorted-by={sortedBy}
-                onsort={onHandleSort}
-                onsave={handleSave}
-                draft-values={draftValues} 
-            >
-            </lightning-datatable>
-        </template>
-    </div>
     <div class="slds-m-aroung_small slds-align_absolute-center">
         <lightning-spinner if:true={isLoading} alternative-text="Loading" size="small"></lightning-spinner>
         <div slot="actions">

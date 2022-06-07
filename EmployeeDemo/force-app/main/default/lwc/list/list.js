@@ -4,6 +4,8 @@ import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningConfirm from 'lightning/confirm'
 import { deleteRecord } from 'lightning/uiRecordApi';
+import { updateRecord } from 'lightning/uiRecordApi';
+
 const COLUMNS = [
     {label: 'FirstName',fieldName: 'FirstName__c', type : 'text',sortable: true, editable: true},
     {label: 'LastName',fieldName: 'LastName__c', type : 'text', sortable: true, editable: true},
@@ -55,140 +57,164 @@ export default class List extends LightningElement {
     @track checkOpenEdit = true;
     columns = COLUMNS;
     error = false;
-    @track employees = [];
     @track wiredEmployeeList = [];
+    @api showTable = false;
 
-
-    // refer
-    @track records;
+    @api records;
     @track errors;
+    @track recordsToDisplay;
+    @track draftValues = [];
 
-    // connectedCallback() {
-    //     this.handleDoInit();
-    // }
-    // handleDoInit() {
-    //     sharedjs._servercall(
-    //         getAllEmployees,
-    //         undefined,
-    //         this.handleSuccess.bind(this),
-    //         this.handleError.bind(this)
-    //     );
-    // }
-    // handleSuccess(result) {
-    //     this.records = result;
-    //     this.errors = undefined;
-    // }
-    // handleError(error) {
-    //     this.errors = error;
-    //     this.records = undefined;
-    // }
-    handleRowActions(event){
-        window.console.log(' Row Level Action Handled ', event.detail.actionName);
-        window.console.log(' Row Level Action Handled ', JSON.stringify(event.detail.data));
-    }
+    defaultSortDirection = 'asc';
+    sortDirection = 'asc';
 
     handlePagination(event){
-        //window.console.log('Pagination Action Handled ', JSON.stringify(event.detail.records));
-    }
-     // end refer
+        window.console.log('Pagination Action Handled ', JSON.stringify(event.detail.records));
+        this.recordsToDisplay = event.detail.records;
+    } 
 
     @wire(getAllEmployees) getData(response){
         this.wiredEmployeeList = response;
         if(response.data){
-            // this.employees = response.data;
             this.records = response.data;
             this.errors = undefined;
+            this.showTable = true;
         }else{
             console.log(response.error);
-            // this.employees = [];
             this.records = undefined;
             this.errors = response.error;
+            this.showTable = false;
         }
-
-        // getAllEmployees().then(result => {
-        //     this.employees = result;
-        // })
-        // .catch(error =>{
-        //     this.employees = error;
-        // });
     }
 
-    // handleRowAction(event){
-    //     const dataRow = event.detail.row;
+    handleRowActions(event){
+        const dataRow = event.detail.row;
         
-    //     switch(event.detail.action.name){
-    //         case 'edit':
-    //             this.openEdit(dataRow)
-    //             break;
-    //         case 'view':
-    //             this.openDetails(dataRow);
-    //             break;
-    //         case 'delete':
-    //             this.confirmDelete(dataRow);
-    //     }
-    // }
+        switch(event.detail.action.name){
+            case 'edit':
+                this.openEdit(dataRow)
+                break;
+            case 'view':
+                this.openDetails(dataRow);
+                break;
+            case 'delete':
+                this.confirmDelete(dataRow);
+        }
+    }
 
-    // async confirmDelete(data){
-    //     const messageDelete ="Are you sure you want to delete this Employee?"
-    //     const employee = data;
-    //     const result = await LightningConfirm.open({
-    //         message: messageDelete,
-    //         label : "Delete Employee",
-    //         theme: "warm"
+    async confirmDelete(data){
+        const messageDelete ="Are you sure you want to delete this Employee?"
+        const employee = data;
+        const result = await LightningConfirm.open({
+            message: messageDelete,
+            label : "Delete Employee",
+            theme: "warm"
 
-    //     });
+        });
 
-    //     if(result){
-    //         const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
-    //         deleteRecord(employee.Id).then(result => {
-    //             this.showToast(
-    //                 fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
-    //             );
-    //             refreshApex(this.employees);
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    // }
+        if(result){
+            const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
+            deleteRecord(employee.Id).then(result => {
+                this.showToast(
+                    fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
+                );
+                refreshApex(this.wiredEmployeeList);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    }
 
-    // openEdit(data){
-    //     this.checkOpenEdit = true;  
-    //     this.template.querySelector('c-edit').openModalEdit(data);
-    // }
-    // turnOffEdit(){
-    //     const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
-    //     this.checkOpenEdit = false;
-    //     this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-    //     refreshApex(this.wiredEmployeeList);
-    // }
+    openEdit(data){
+        this.checkOpenEdit = true;  
+        this.template.querySelector('c-edit').openModalEdit(data);
+    }
+    turnOffEdit(){
+        const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
+        this.checkOpenEdit = false;
+        this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
+        refreshApex(this.wiredEmployeeList);
+    }
 
-    // openDetails(data){
-    //     this.template.querySelector('c-details').openModalDetails(data);
-    // }
+    openDetails(data){
+        this.template.querySelector('c-details').openModalDetails(data);
+    }
 
-    // openCreate(){
-    //     this.checkOpenCreate = true;
-    //     this.template.querySelector('c-create').openModalCreate();
+    openCreate(){
+        this.checkOpenCreate = true;
+        this.template.querySelector('c-create').openModalCreate();
 
-    // }
+    }
     
-    // turnOffCreate(){
-    //     const fieldToast = {title : 'Success' , message :'Created !' , variant: 'success', mode :'success'}
-    //     this.checkOpenCreate = false;
-    //     this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-    //     refreshApex(this.wiredEmployeeList);     
-    // }
+    turnOffCreate(){
+        const fieldToast = {title : 'Success' , message :'Created !' , variant: 'success', mode :'success'}
+        this.checkOpenCreate = false;
+        this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
+        refreshApex(this.wiredEmployeeList);     
+    }
 
-    // showToast(title, message, variant,mode, data) {
-    //     const event = new ShowToastEvent({
-    //         title: title,
-    //         message: message,
-    //         variant: variant,
-    //         mode : mode
-    //     });
-    //     this.dispatchEvent(event);
-    // }
+    showToast(title, message, variant,mode, data) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode : mode
+        });
+        this.dispatchEvent(event);
+    }
 
+    // sort
+    onHandleSort(event) {
+        const { fieldName: sortedBy, sortDirection } = event.detail;
+        const cloneData = [...this.recordsToDisplay];
+        cloneData.sort(this.sortBy(sortedBy, sortDirection === 'asc' ? 1 : -1));
+        this.recordsToDisplay = cloneData;
+        this.sortDirection = sortDirection;
+        this.sortedBy = sortedBy;
+    }
+    sortBy( field, reverse, primer ) {
+
+        const key = primer
+        ? function( x ) {
+            return primer(x[field]);
+        }
+        : function( x ) {
+            return x[field];
+        };
+
+        return function( a, b ) {
+            a = key(a);
+            b = key(b);
+            return reverse * ( ( a > b ) - ( b > a ) );
+        };
+    }
+
+    handleSave(event) {
+        this.isLoading = true;
+        const recordInputs =  event.detail.draftValues.slice().map(draft => {
+            const fields = Object.assign({}, draft);
+            return { fields };
+        });
+        const promises = recordInputs.map(recordInput => updateRecord(recordInput));
+        window.console.log(' Updating Records.... ');
+        Promise.all(promises).then(record => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'All Records updated',
+                    variant: 'success'
+                })
+            );
+            this.draftValues = [];
+            eval("$A.get('e.force:refreshView').fire();");
+            return refreshApex(this.wiredEmployeeList);
+        }).catch(error => {
+            window.console.error(' error **** \n '+error);
+        })
+        .finally(()=>{
+            this.isLoading = false;
+        })
+    }
 
 }

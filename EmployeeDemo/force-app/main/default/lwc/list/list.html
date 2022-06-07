@@ -1,6 +1,9 @@
 <template>
     <div style="height: 300px; width:100%; ">
-        <h1 class="title-table">LIST EMPLOYEE</h1>
+        <div class="slds-m-top_small">
+            <h1 class="title-table">LIST EMPLOYEE</h1>
+        </div>
+        
         <div>
             <lightning-button 
                 variant="brand" 
@@ -11,39 +14,46 @@
             >
             </lightning-button>     
         </div>
-        <!-- <template if:true={employees}>
-            <lightning-datatable
-                key-field= "id"
-                data={employees}
-                show-row-number-column
-                suppress-bottom-bar
-                columns={columns}
-                onrowaction={handleRowAction}
-                onrowselection = {handeSelect}
+        
+        
+        <div class="slds-m-aroung_small">
+            <template if:true={showTable}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={recordsToDisplay}
+                    show-row-number-column="false"
+                    hide-checkbox-column
+                    columns={columns}
+                    onrowaction={handleRowActions}
+                    default-sort-direction={defaultSortDirection}
+                    sorted-direction={sortDirection}
+                    sorted-by={sortedBy}
+                    onsort={onHandleSort}
+                    onsave={handleSave}
+                    draft-values={draftValues} 
                 >
-                
-        </lightning-datatable>
-                
-        </template> -->
-
+                </lightning-datatable>
+            </template>
+        </div>
         <div class="slds-m-around_small">
             <template if:false={errors}>
                 <template if:true={records}>
                     <c-pagination
-                        records={records}
-                        show-table="true"
-                        columns={columns}
-                        recordsperpage="8"
-                        onactions={handleRowActions}
-                        onpagination={handlePagination}
-                    >
+                    records={records}
+                    show-table="true"                        
+                    recordsperpage="8"
+                    onpagination={handlePagination}>
                     </c-pagination>
                 </template>
             </template>
         </div>
+        
     </div>
 
-    <!-- <c-details></c-details>
+
+    
+    <c-details></c-details>
     <c-create if:true={checkOpenCreate} onchangeopen={turnOffCreate}></c-create>
-    <c-edit if:true={checkOpenEdit} onchangeopen={turnOffEdit}></c-edit> -->
+    <c-edit if:true={checkOpenEdit} onchangeopen={turnOffEdit}></c-edit>
+    
 </template>

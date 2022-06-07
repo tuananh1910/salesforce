@@ -5,13 +5,10 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const DELAY = 300;
 export default class Pagination extends LightningElement {
-    @api showTable = false;
+    
     @api records;
+    @api recordsToDisplay
     @api recordsperpage;
-    @api columns;
-
-    @track draftValues = [];
-    @track recordsToDisplay;
 
     totalRecords;
     pageNo;
@@ -21,8 +18,7 @@ export default class Pagination extends LightningElement {
     end = false;
     pagelinks = [];
     isLoading = false;
-    defaultSortDirection = 'asc';
-    sortDirection = 'asc';
+
     ortedBy;
 
     connectedCallback() {
@@ -76,6 +72,7 @@ export default class Pagination extends LightningElement {
         this.isLoading = true;
         let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
         let end = parseInt(begin) + parseInt(this.recordsperpage);
+        window.console.log(JSON.stringify(this.records))
         this.recordsToDisplay = this.records.slice(begin, end);
 
         this.startRecord = begin + parseInt(1);
@@ -133,60 +130,6 @@ export default class Pagination extends LightningElement {
     handlePage(button) {
         this.pageNo = button.target.label;
         this.preparePaginationList();
-    }
-
-    onHandleSort(event) {
-        const { fieldName: sortedBy, sortDirection } = event.detail;
-        const cloneData = [...this.recordsToDisplay];
-        cloneData.sort(this.sortBy(sortedBy, sortDirection === 'asc' ? 1 : -1));
-        this.recordsToDisplay = cloneData;
-        this.sortDirection = sortDirection;
-        this.sortedBy = sortedBy;
-    }
-    sortBy( field, reverse, primer ) {
-
-        const key = primer
-        ? function( x ) {
-            return primer(x[field]);
-        }
-        : function( x ) {
-            return x[field];
-        };
-
-        return function( a, b ) {
-            a = key(a);
-            b = key(b);
-            return reverse * ( ( a > b ) - ( b > a ) );
-        };
-    }
-
-    handleSave(event) {
-        this.isLoading = true;
-        const recordInputs =  event.detail.draftValues.slice().map(draft => {
-            const fields = Object.assign({}, draft);
-            return { fields };
-        });
-        const promises = recordInputs.map(recordInput => updateRecord(recordInput));
-        window.console.log(' Updating Records.... ');
-        Promise.all(promises).then(record => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'All Records updated',
-                    variant: 'success'
-                })
-            );
-            this.draftValues = [];
-            eval("$A.get('e.force:refreshView').fire();");
-            return refreshApex(this.recordsToDisplay);
-        }).catch(error => {
-            window.console.error(' error **** \n '+error);
-        })
-        .finally(()=>{
-            this.isLoading = false;
-        })
-    }
-
-    
+    }  
 
 }
