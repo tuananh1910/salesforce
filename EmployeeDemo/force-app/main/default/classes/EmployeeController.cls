@@ -8,6 +8,7 @@ public with sharing class EmployeeController {
     public static List<Employee__c> getAllEmployees(){
         return [
             SELECT 
+            id,
             Age__c,
             Certifications__c,
             Date_of_Birth__c,
