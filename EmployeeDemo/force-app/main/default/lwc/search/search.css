@@ -1,0 +1,9 @@
+/* .search-input{
+    width: 200px;
+} */
+
+.search-btn{
+    display: flex;
+    justify-content: center;
+    
+}

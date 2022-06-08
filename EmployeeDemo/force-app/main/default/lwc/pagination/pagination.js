@@ -21,11 +21,19 @@ export default class Pagination extends LightningElement {
 
     ortedBy;
 
+    @api
+    setupAgainPagination(records){
+        this.records = records;
+        this.setRecordsToDisplay();
+    }
+
     connectedCallback() {
         this.isLoading = true;
         this.setRecordsToDisplay();
     }
-    setRecordsToDisplay() {
+
+    setRecordsToDisplay() { 
+        this.clearAllPageLinks();
         this.totalRecords = this.records.length;
         this.pageNo = 1;
         this.totalPages = Math.ceil(this.totalRecords / this.recordsperpage);
@@ -36,6 +44,13 @@ export default class Pagination extends LightningElement {
         }
         this.isLoading = false;
     }
+
+    clearAllPageLinks(){
+        for (let i = 1; i <= this.totalPages; i++) {
+            this.pagelinks.pop(i);
+        }
+    }
+
     handleClick(event) {
         let label = event.target.label;
         if (label === "First") {
@@ -68,11 +83,11 @@ export default class Pagination extends LightningElement {
         this.pageNo = this.totalPages;
         this.preparePaginationList();
     }
+
     preparePaginationList() {
         this.isLoading = true;
         let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
         let end = parseInt(begin) + parseInt(this.recordsperpage);
-        window.console.log(JSON.stringify(this.records))
         this.recordsToDisplay = this.records.slice(begin, end);
 
         this.startRecord = begin + parseInt(1);
@@ -95,7 +110,6 @@ export default class Pagination extends LightningElement {
 
     disableEnableActions() {
         let buttons = this.template.querySelectorAll("lightning-button");
-
         buttons.forEach(bun => {
             if (bun.label === this.pageNo) {
                 bun.disabled = true;

@@ -9,14 +9,14 @@ import { updateRecord } from 'lightning/uiRecordApi';
 const COLUMNS = [
     {label: 'FirstName',fieldName: 'FirstName__c', type : 'text',sortable: true, editable: true},
     {label: 'LastName',fieldName: 'LastName__c', type : 'text', sortable: true, editable: true},
-    {label: 'FullName',fieldName: 'FullName__c', type : 'text', sortable: true, editable: true},
-    {label: 'Age',fieldName: 'Age__c', type : 'text'},
+    {label: 'FullName',fieldName: 'FullName__c', type : 'text', sortable: true},
+    {label: 'Age',fieldName: 'Age__c', type : 'text', sortable: true},
     {label: 'Certifications',fieldName: 'Certifications__c', type : 'checkbox'},
     {label: 'DateOfBirth',fieldName: 'Date_of_Birth__c', type : 'text'},
     {label: 'Email',fieldName: 'Email__c', type : 'text'},
     {label: 'Experience',fieldName: 'Experience__c', type : 'text'},
     {label: 'PhoneNumber',fieldName: 'Phone_number__c', type : 'text'},
-    {label: 'Position',fieldName: 'Position__c', type : 'checkbox'},
+    {label: 'Position',fieldName: 'Position__c', type : 'checkbox', sortable: true},
     {
         label: 'View',
         type: 'button-icon',
@@ -58,7 +58,7 @@ export default class List extends LightningElement {
     columns = COLUMNS;
     error = false;
     @track wiredEmployeeList = [];
-    @api showTable = false;
+    @track showTable = false;
 
     @api records;
     @track errors;
@@ -69,14 +69,14 @@ export default class List extends LightningElement {
     sortDirection = 'asc';
 
     handlePagination(event){
-        window.console.log('Pagination Action Handled ', JSON.stringify(event.detail.records));
         this.recordsToDisplay = event.detail.records;
     } 
 
-    handleSearch(event){
-        window.console.log(JSON.stringify(event.detail.records));
-        // have records , set recordsToDisplay = result
-        // if result more recordsperpage ? pagination : nothing
+    handleSearch(event){   
+        this.recordsToDisplay = event.detail.records;
+        this.records = this.recordsToDisplay;
+        this.template.querySelector('c-pagination').setupAgainPagination(this.records);
+        console.log('error', event.detail.error);
     }
 
 
@@ -116,7 +116,6 @@ export default class List extends LightningElement {
             message: messageDelete,
             label : "Delete Employee",
             theme: "warm"
-
         });
 
         if(result){
@@ -125,6 +124,7 @@ export default class List extends LightningElement {
                 this.showToast(
                     fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
                 );
+                // refresh data chuwa?
                 refreshApex(this.wiredEmployeeList);
             })
             .catch(error => {
@@ -141,7 +141,7 @@ export default class List extends LightningElement {
         const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
         this.checkOpenEdit = false;
         this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-        refreshApex(this.wiredEmployeeList);
+        
     }
 
     openDetails(data){
@@ -158,7 +158,7 @@ export default class List extends LightningElement {
         const fieldToast = {title : 'Success' , message :'Created !' , variant: 'success', mode :'success'}
         this.checkOpenCreate = false;
         this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-        refreshApex(this.wiredEmployeeList);     
+         // data dit not refresh after create    
     }
 
     showToast(title, message, variant,mode, data) {
@@ -204,7 +204,6 @@ export default class List extends LightningElement {
             return { fields };
         });
         const promises = recordInputs.map(recordInput => updateRecord(recordInput));
-        window.console.log(' Updating Records.... ');
         Promise.all(promises).then(record => {
             this.dispatchEvent(
                 new ShowToastEvent({
@@ -215,6 +214,7 @@ export default class List extends LightningElement {
             );
             this.draftValues = [];
             eval("$A.get('e.force:refreshView').fire();");
+            // chua refresh duoc
             return refreshApex(this.wiredEmployeeList);
         }).catch(error => {
             window.console.error(' error **** \n '+error);

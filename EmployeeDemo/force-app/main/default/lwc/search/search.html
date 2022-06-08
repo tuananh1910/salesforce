@@ -2,21 +2,20 @@
     <div class="slds-m-around_medium">
       
       <div class="slds-m-bottom_small">
-          <lightning-input type="text"
+          <lightning-input type="search"
              value={searchValue}
              label="Employee Name"
              onchange={searchKeyword}
              >
             </lightning-input>
             
-
+           
        </div>
-       
+       <div class ="search-btn">
        <lightning-button label="Search"
-          onclick={handleSearchKeyword}
-          variant="brand"></lightning-button>
-          <!-- <div>
-            <lightning-icon icon-name='utility:search' alternative-text='search' variant='inverse' size='medium' title='search'></lightning-icon>
-            </div> -->
+            onclick={handleSearchKeyword}
+            variant="brand"
+            ></lightning-button>
+         </div>
     </div>
  </template>

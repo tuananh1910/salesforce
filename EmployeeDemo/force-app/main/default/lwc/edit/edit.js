@@ -1,8 +1,11 @@
 import { api, LightningElement, track } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
 
 export default class Edit extends LightningElement {
     @track modalContainer = false;
     editEmployee;
+
+    @api records;
 
     @api
     openModalEdit(data){
@@ -14,8 +17,7 @@ export default class Edit extends LightningElement {
         this.modalContainer=false;
     }
     
-    finish(){
-        this.template.querySelector('lightning-record-edit-form').submit(this.fields);
+    finish(event){
         const customEvent = new CustomEvent('changeopen');
         this.dispatchEvent(customEvent);
         this.closeModalAction();

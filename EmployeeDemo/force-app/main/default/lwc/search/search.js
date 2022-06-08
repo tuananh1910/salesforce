@@ -35,7 +35,13 @@ export default class Search extends LightningElement {
                         message: error.body.message,
                     });
                     this.dispatchEvent(event);
-                    // reset contacts var with null   
+
+                    const search = new CustomEvent('search',{
+                        detail: {
+                            errors : error.body.message
+                        }
+                    });
+                    this.dispatchEvent(search);   
                     
                 });
         } else {
