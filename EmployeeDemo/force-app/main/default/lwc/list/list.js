@@ -76,7 +76,6 @@ export default class List extends LightningElement {
         this.recordsToDisplay = event.detail.records;
         this.records = this.recordsToDisplay;
         this.template.querySelector('c-pagination').setupAgainPagination(this.records);
-        console.log('error', event.detail.error);
     }
 
 
@@ -86,9 +85,8 @@ export default class List extends LightningElement {
             this.records = response.data;
             this.errors = undefined;
             this.showTable = true;
-        }else{
-            console.log(response.error);
-            this.records = undefined;
+        }else if(response.error){
+            this.records = [];
             this.errors = response.error;
             this.showTable = false;
         }

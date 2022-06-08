@@ -30,7 +30,7 @@ export default class Search extends LightningElement {
                 })
                 .catch(error => {
                     const event = new ShowToastEvent({
-                        title: 'Error',
+                        title: 'Not Found',
                         variant: 'error',
                         message: error.body.message,
                     });
