@@ -7,10 +7,14 @@ import Email from '@salesforce/schema/Employee__c.Email__c';
 import Experience from '@salesforce/schema/Employee__c.Experience__c';
 import Phone_number from '@salesforce/schema/Employee__c.Phone_number__c';
 import Position from '@salesforce/schema/Employee__c.Position__c';
+import Age from '@salesforce/schema/Employee__c.Age__c';
+import FullName from '@salesforce/schema/Employee__c.FullName__c';
 
 const fields = [
     FirstName,
     LastName,
+    FullName,
+    Age,
   Certifications,
    Date_of_Birth,
    Email,
