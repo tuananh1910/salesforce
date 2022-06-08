@@ -80,8 +80,8 @@ export default class List extends LightningElement {
 
 
     @wire(getAllEmployees) getData(response){
-        this.wiredEmployeeList = response;
-        if(response.data){
+        this.wiredEmployeeList = response.data;
+        if( response.data){
             this.records = response.data;
             this.errors = undefined;
             this.showTable = true;
@@ -139,7 +139,7 @@ export default class List extends LightningElement {
         const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
         this.checkOpenEdit = false;
         this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-        
+        refreshApex(this.wiredEmployeeList);
     }
 
     openDetails(data){

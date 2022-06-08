@@ -16,9 +16,11 @@
                             object-api-name="Employee__c"
                             record-id={editEmployee.Id}
                             mode="edit"
-                            layout-type="Full"
+                           
                             oncancel={closeModalAction}
                             onsuccess={finish}
+                            columns="2"
+                            fields={fields}
                         >
                         </lightning-record-form>
                     </lightning-card>

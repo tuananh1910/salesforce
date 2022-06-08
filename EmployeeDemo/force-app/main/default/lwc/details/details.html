@@ -11,24 +11,14 @@
 
                  <div class="slds-modal__content slds-p-around_medium">
                    <lightning-card>
-                    <lightning-record-view-form
+                    <lightning-record-form
                     object-api-name="Employee__c"
                     record-id={detailsEmployee.Id}
-                    layout-type = 'full'>
-
-                    <lightning-output-field field-name="FirstName__c"> </lightning-output-field>
-                    <lightning-output-field field-name="LastName__c"> </lightning-output-field>
-                    <lightning-output-field field-name="FullName__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Age__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Date_of_Birth__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Email__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Phone_number__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Certifications__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Experience__c"> </lightning-output-field>
-                    <lightning-output-field field-name="Position__c"> </lightning-output-field>
-
-
-                </lightning-record-view-form>
+                    columns="2" 
+                    fields ={fields}
+                    mode="readonly"
+                    >
+                </lightning-record-form>
                     </lightning-card>
                  </div>
                  <footer class="slds-modal__footer">

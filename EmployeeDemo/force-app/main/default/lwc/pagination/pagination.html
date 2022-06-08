@@ -32,6 +32,15 @@
                 </template>
             </lightning-button-group>
         </template>
+        <!-- <select id="numRecordOfCurrentPage" onchange={changeNumberRecordDisplay} class="slds-m-left--x-small slds-button_neutral slds-select" style="width: 100px;">
+
+            <template for:each={pageSize} for:item="size">
+
+                <option key={size} value={size}>{size} / page</option>
+
+            </template>
+
+          </select> -->
             <lightning-button
             variant="neutral"
             title="next"
@@ -51,6 +60,7 @@
             icon-position="right"
             onclick={handleClick}
             ></lightning-button>
+            
         </div>
     </div>
     <div class="slds-m-top_small"></div>
