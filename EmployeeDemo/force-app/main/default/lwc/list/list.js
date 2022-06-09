@@ -53,13 +53,15 @@ const COLUMNS = [
     }
 ]
 export default class List extends LightningElement {
+    // totalEmployee;
+
     @track showDeleteMultiRecordButton = false;
     columns = COLUMNS;
     error = false;
-    wiredEmployeeList ;
+    wiredEmployeeList;
     @track showTable = false;
 
-    @api records;
+    @track records;
     @track errors;
     @track recordsToDisplay;
     @track draftValues = [];
@@ -75,9 +77,12 @@ export default class List extends LightningElement {
     modalCreate = false;
     recordId;
 
-    
+    // updateEmployeeHandler(event){
+    //     this.records 
+    // }
 
     handlePagination(event){
+        console.log('paginating');
         this.recordsToDisplay = event.detail.records;
     } 
 
@@ -90,12 +95,12 @@ export default class List extends LightningElement {
     @wire(getAllEmployees) 
     getData(response){
         this.wiredEmployeeList = response;
-        const{data, error}  = response;
-        if( data){
-            this.records = data;
+        if(response.data){
+            this.records = response.data;
+            console.log("wire data : ",JSON.stringify(this.records));
             this.errors = undefined;
             this.showTable = true;
-        }else if(error){
+        }else if(response.error){
             this.records = [];
             this.errors = response.error;
             this.showTable = false;
@@ -130,7 +135,7 @@ export default class List extends LightningElement {
                 this.showToast(
                     fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
                 );
-                refreshApex(this.wiredEmployeeList);
+                
             }else{
                 let fieldToast = {title : 'Error' , message :'Can not delete  !' , variant: 'error', mode :'error'}
                 this.showToast(
@@ -146,6 +151,7 @@ export default class List extends LightningElement {
         for (let i = 0 ; i<data.length;i++){
             console.log('id ? : ',data[i]);
             deleteRecord(data[i]).then(result => {
+                refreshApex(this.wiredEmployeeList);
             })
             .catch(error => {
                 console.log('error');
@@ -159,8 +165,7 @@ export default class List extends LightningElement {
 
 
     handleRowActions(event){
-        const dataRow = event.detail.row;
-        let id = dataRow.Id;
+        let id =event.detail.row.Id;
         switch(event.detail.action.name){
             case 'edit':
                 this.openEdit(id);
@@ -169,11 +174,11 @@ export default class List extends LightningElement {
                 this.openDetails(id);
                 break;
             case 'delete':
-                this.confirmDelete(dataRow);
+                this.confirmDelete(id);
         }
     }
 
-    async confirmDelete(data){
+    async confirmDelete(id){
         const messageDelete ="Are you sure you want to delete this Employee?"
         const result = await LightningConfirm.open({
             message: messageDelete,
@@ -182,12 +187,12 @@ export default class List extends LightningElement {
         });
 
         if(result){
-            deleteRecord(data.Id).then(result => {
-                const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
-
-                this.showToast(
-                    fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
-                );
+            deleteRecord(id).then(result => {
+                if(result){
+                    const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
+                    this.showToast(
+                    fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
+                }
                 refreshApex(this.wiredEmployeeList);
             })
             .catch(error => {
@@ -203,10 +208,15 @@ export default class List extends LightningElement {
         this.recordId = data;
     }
     editSuccess(){
+        console.log('edit');
+        const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
+        this.showToast(
+        fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
+
         this.modalEdit = false;
         refreshApex(this.wiredEmployeeList);
+        this.template.querySelector('c-pagination').setRecordsToDisplay();
     }
-
     closeEdit(){
         this.modalEdit = false;
     }
@@ -227,6 +237,9 @@ export default class List extends LightningElement {
         this.modalCreate = true;
     }
     createSuccess(){
+        const fieldToast = {title : 'Success' , message :'Created !' , variant: 'success', mode :'success'}
+        this.showToast(
+        fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
        this.modalCreate = false;
        refreshApex(this.wiredEmployeeList);
     }
@@ -245,7 +258,6 @@ export default class List extends LightningElement {
         this.dispatchEvent(event);
     }
 
-    // sort
     onHandleSort(event) {
         const { fieldName: sortedBy, sortDirection } = event.detail;
         const cloneData = [...this.recordsToDisplay];
@@ -288,7 +300,6 @@ export default class List extends LightningElement {
             );
             this.draftValues = [];
             eval("$A.get('e.force:refreshView').fire();");
-            // chua refresh duoc
             return refreshApex(this.wiredEmployeeList);
         }).catch(error => {
             window.console.error(' error **** \n '+error);

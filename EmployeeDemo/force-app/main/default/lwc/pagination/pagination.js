@@ -5,9 +5,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const DELAY = 300;
 export default class Pagination extends LightningElement {
-    
+    alwaysFalse = false;
     @api records;
-    @api recordsToDisplay;
     @api recordsperpage;
 
     totalRecords;
@@ -51,7 +50,8 @@ export default class Pagination extends LightningElement {
         this.setRecordsToDisplay();
 
     }
-
+    
+    @api
     setRecordsToDisplay() { 
         this.clearAllPageLinks();
         this.totalRecords = this.records.length;
@@ -104,16 +104,29 @@ export default class Pagination extends LightningElement {
         this.preparePaginationList();
     }
 
+    // @api
+    // get recordsToDisplay() {
+    //     console.log('recordsToDisplay');
+    //     let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
+    //     let end = parseInt(begin) + parseInt(this.recordsperpage);
+
+    //     this.startRecord = begin + parseInt(1);
+    //     this.endRecord = end > this.totalRecords ? this.totalRecords : end;
+    //     this.end = end > this.totalRecords ? true : false;
+    //     return this.records.slice(begin, end);
+    // }
+
     preparePaginationList() {
         this.isLoading = true;
+        console.log('recordsToDisplay');
+        console.log(JSON.stringify(this.records));
         let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
         let end = parseInt(begin) + parseInt(this.recordsperpage);
-        this.recordsToDisplay = this.records.slice(begin, end);
 
         this.startRecord = begin + parseInt(1);
         this.endRecord = end > this.totalRecords ? this.totalRecords : end;
         this.end = end > this.totalRecords ? true : false;
-
+        this.recordsToDisplay =  this.records.slice(begin, end);
         const event = new CustomEvent('pagination', {
             detail: { 
                 records : this.recordsToDisplay
@@ -132,7 +145,7 @@ export default class Pagination extends LightningElement {
         let buttons = this.template.querySelectorAll("lightning-button");
         buttons.forEach(bun => {
             if (bun.label === this.pageNo) {
-                bun.disabled = true;
+                bun.disabled = false; // true
             } else {
                 bun.disabled = false;
             }

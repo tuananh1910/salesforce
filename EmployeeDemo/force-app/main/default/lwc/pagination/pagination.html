@@ -21,7 +21,7 @@
             icon-position="left"
             onclick={handleClick}
             ></lightning-button>
-        <template if:true={pagelinks}>
+        <!-- <template if:true={pagelinks}>
             <lightning-button-group>
                 <template for:each={pagelinks} for:item="page">
                 <lightning-button
@@ -31,18 +31,18 @@
                 ></lightning-button>
                 </template>
             </lightning-button-group>
-        </template>
-            &nbsp;
-            <lightning-button
+        </template> -->
+        &nbsp;
+
+        <lightning-button
             variant="neutral"
-            title="next"
-            class="slds-float_right"
-            label="Next"
-            icon-name="utility:chevronright"
-            icon-position="right"
+            title="pageNo"
+            label={pageNo}
             onclick={handleClick}
-            ></lightning-button>
             
+            ></lightning-button>
+
+            &nbsp;
             <lightning-button
             variant="neutral"
             title="last"
@@ -51,6 +51,17 @@
             icon-name="utility:chevronright"
             icon-position="right"
             onclick={handleClick}
+            ></lightning-button>
+            
+            <lightning-button
+            variant="neutral"
+            title="next"
+            class="slds-float_right"
+            label="Next"
+            icon-name="utility:chevronright"
+            icon-position="right"
+            onclick={handleClick}
+           
             ></lightning-button>.
             
         </div>

@@ -30,10 +30,8 @@ export default class Edit extends LightningElement {
         this.dispatchEvent(customEvent);
     }
     
-    finish(event){
+    finish(event){       
         const customEvent = new CustomEvent('success');
-        this.dispatchEvent(customEvent);
-        
-
+        this.dispatchEvent(customEvent);       
     }
 }

@@ -66,6 +66,12 @@
                     recordsperpage="5"
                     onpagination={handlePagination}>
                     </c-pagination>
+
+                    <!-- <c-pagination 
+                    records={records} 
+                    onupdate={updateEmployeeHandler}
+                    record-size="6">
+                    </c-pagination> -->
                 </template>
             </template>
         </div>
@@ -73,7 +79,6 @@
     </div>
 
 
-    
     <c-details modal-view={modalView} record-id={recordId} onclose={closeDetails}></c-details>
     <c-create modal-create={modalCreate} onsuccess={createSuccess} onclose={closeCreate}></c-create>
     <c-edit modal-edit={modalEdit} record-id={recordId} onclose={closeEdit}  onsuccess={editSuccess}></c-edit>
