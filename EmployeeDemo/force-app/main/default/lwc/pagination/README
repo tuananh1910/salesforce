@@ -1,1 +1,5 @@
 https://pantherschools.com/how-to-implement-pagination-in-lightning-web-component/
+
+
+FIND :term IN ALL FIELDS
+RETURNING Lead(Name, Company WHERE Name LIKE :filter OR Company LIKE :filter)...

@@ -21,7 +21,6 @@ public with sharing class EmployeeController {
             Position__c,
             No__c
             FROM Employee__c
-            LIMIT 200
         ];
     }
 

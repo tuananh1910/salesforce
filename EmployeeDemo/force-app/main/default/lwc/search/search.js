@@ -4,12 +4,11 @@ import {ShowToastEvent} from 'lightning/platformShowToastEvent'
 
 export default class Search extends LightningElement {
     searchValue = '';
-    // update searchValue var when input field value change
+
     searchKeyword(event) {
         this.searchValue = event.target.value;
     }
  
-    // call apex method on button click 
     handleSearchKeyword() {
         
         if (this.searchValue !== '') {
@@ -17,10 +16,6 @@ export default class Search extends LightningElement {
                     searchKey: this.searchValue
                 })
                 .then(result => {
-                    //  return employee list from server  
-                    // dispatchEvent to list component use with attribute records : data (records)
-                    // list will use and set recordsDisplay for datatable show
-                   
                     const event = new CustomEvent('search',{
                         detail: {
                             records : result

@@ -21,7 +21,18 @@
                 onclick={openCreate}
                 class="slds-m-left_x-small"
             >
-            </lightning-button>     
+            </lightning-button>
+            <template if:true={showDeleteMultiRecordButton}>
+
+                <lightning-button 
+                    variant="destructive"
+                    label="Delete" 
+                    title="Delete action" 
+                    onclick={confirmDeletes}
+                    class="slds-m-left_x-small"
+                >
+                </lightning-button>  
+            </template>     
         </div>
         <br>
         
@@ -32,7 +43,6 @@
                     key-field="Id"
                     data={recordsToDisplay}
                     show-row-number-column="false"
-                    hide-checkbox-column
                     columns={columns}
                     onrowaction={handleRowActions}
                     default-sort-direction={defaultSortDirection}
@@ -42,6 +52,7 @@
                     onsave={handleSave}
                     draft-values={draftValues}
                     errors={errors}
+                    onrowselection={handleSelected}
                 >
                 </lightning-datatable>
             </template>
@@ -52,7 +63,7 @@
                     <c-pagination
                     records={records}
                     show-table="true"                        
-                    recordsperpage="8"
+                    recordsperpage="5"
                     onpagination={handlePagination}>
                     </c-pagination>
                 </template>
@@ -63,8 +74,8 @@
 
 
     
-    <c-details></c-details>
-    <c-create if:true={checkOpenCreate} onchangeopen={turnOffCreate}></c-create>
-    <c-edit  onchangeopen={turnOffEdit}></c-edit>
+    <c-details modal-view={modalView} record-id={recordId} onclose={closeDetails}></c-details>
+    <c-create modal-create={modalCreate} onsuccess={createSuccess} onclose={closeCreate}></c-create>
+    <c-edit modal-edit={modalEdit} record-id={recordId} onclose={closeEdit}  onsuccess={editSuccess}></c-edit>
     
 </template>

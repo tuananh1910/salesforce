@@ -53,11 +53,10 @@ const COLUMNS = [
     }
 ]
 export default class List extends LightningElement {
-    @track checkOpenCreate = true;
-    @track checkOpenEdit = true;
+    @track showDeleteMultiRecordButton = false;
     columns = COLUMNS;
     error = false;
-    @track wiredEmployeeList = [];
+    wiredEmployeeList ;
     @track showTable = false;
 
     @api records;
@@ -65,8 +64,18 @@ export default class List extends LightningElement {
     @track recordsToDisplay;
     @track draftValues = [];
 
+    listIdSelected;
+
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
+    isDeletedRecords = true;
+
+    modalEdit = false;
+    modalView = false;
+    modalCreate = false;
+    recordId;
+
+    
 
     handlePagination(event){
         this.recordsToDisplay = event.detail.records;
@@ -78,29 +87,86 @@ export default class List extends LightningElement {
         this.template.querySelector('c-pagination').setupAgainPagination(this.records);
     }
 
-
-    @wire(getAllEmployees) getData(response){
-        this.wiredEmployeeList = response.data;
-        if( response.data){
-            this.records = response.data;
+    @wire(getAllEmployees) 
+    getData(response){
+        this.wiredEmployeeList = response;
+        const{data, error}  = response;
+        if( data){
+            this.records = data;
             this.errors = undefined;
             this.showTable = true;
-        }else if(response.error){
+        }else if(error){
             this.records = [];
             this.errors = response.error;
             this.showTable = false;
         }
     }
 
+    
+    handleSelected(event){
+        const selectedRows = event.detail.selectedRows;
+        this.listIdSelected = [];
+        for (let i = 0; i < selectedRows.length; i++) {
+            this.listIdSelected.push(selectedRows[i].Id)
+        }
+        
+        if(this.listIdSelected.length >0) {
+            this.showDeleteMultiRecordButton = true;
+          } else {
+              this.showDeleteMultiRecordButton = false;
+          }
+    }
+    async confirmDeletes(){
+        let messageDelete ="Are you sure you want to delete these Employees?";
+        let result = await LightningConfirm.open({
+            message: messageDelete,
+            label : "Delete Employees",
+            theme: "error"
+        });
+        if(result){
+
+            if(this.handleDeletes(this.listIdSelected)){
+                let fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
+                this.showToast(
+                    fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
+                );
+                refreshApex(this.wiredEmployeeList);
+            }else{
+                let fieldToast = {title : 'Error' , message :'Can not delete  !' , variant: 'error', mode :'error'}
+                this.showToast(
+                    fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
+                );
+               
+            }        
+        }
+    }
+
+    handleDeletes(data){
+        console.log('handle deletes',JSON.stringify(data));
+        for (let i = 0 ; i<data.length;i++){
+            console.log('id ? : ',data[i]);
+            deleteRecord(data[i]).then(result => {
+            })
+            .catch(error => {
+                console.log('error');
+                this.isDeletedRecords  = false;
+            });
+        }
+        return this.isDeletedRecords;
+    }
+
+    
+
+
     handleRowActions(event){
         const dataRow = event.detail.row;
-        
+        let id = dataRow.Id;
         switch(event.detail.action.name){
             case 'edit':
-                this.openEdit(dataRow)
+                this.openEdit(id);
                 break;
             case 'view':
-                this.openDetails(dataRow);
+                this.openDetails(id);
                 break;
             case 'delete':
                 this.confirmDelete(dataRow);
@@ -109,20 +175,19 @@ export default class List extends LightningElement {
 
     async confirmDelete(data){
         const messageDelete ="Are you sure you want to delete this Employee?"
-        const employee = data;
         const result = await LightningConfirm.open({
             message: messageDelete,
             label : "Delete Employee",
-            theme: "warm"
+            theme: "error"
         });
 
         if(result){
-            const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
-            deleteRecord(employee.Id).then(result => {
+            deleteRecord(data.Id).then(result => {
+                const fieldToast = {title : 'Success' , message :'Deleted !' , variant: 'success', mode :'success'}
+
                 this.showToast(
                     fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode
                 );
-                // refresh data chuwa?
                 refreshApex(this.wiredEmployeeList);
             })
             .catch(error => {
@@ -131,35 +196,46 @@ export default class List extends LightningElement {
         }
     }
 
+    
+
     openEdit(data){
-        this.checkOpenEdit = true;  
-        this.template.querySelector('c-edit').openModalEdit(data);
+        this.modalEdit = true;  
+        this.recordId = data;
     }
-    turnOffEdit(){
-        const fieldToast = {title : 'Success' , message :'Edited !' , variant: 'success', mode :'success'}
-        this.checkOpenEdit = false;
-        this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
+    editSuccess(){
+        this.modalEdit = false;
         refreshApex(this.wiredEmployeeList);
     }
 
-    openDetails(data){
-        this.template.querySelector('c-details').openModalDetails(data);
+    closeEdit(){
+        this.modalEdit = false;
     }
+
+
+
+    openDetails(data){
+        this.modalView = true;
+        this.recordId = data
+    }
+
+    closeDetails(){
+        this.modalView = false;
+    }
+
 
     openCreate(){
-        this.checkOpenCreate = true;
-        this.template.querySelector('c-create').openModalCreate();
-
+        this.modalCreate = true;
     }
-    
-    turnOffCreate(){
-        const fieldToast = {title : 'Success' , message :'Created !' , variant: 'success', mode :'success'}
-        this.checkOpenCreate = false;
-        this.showToast(fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
-         // data dit not refresh after create    
+    createSuccess(){
+       this.modalCreate = false;
+       refreshApex(this.wiredEmployeeList);
+    }
+    closeCreate(){
+        this.modalCreate = false;
     }
 
-    showToast(title, message, variant,mode, data) {
+
+    showToast(title, message, variant,mode) {
         const event = new ShowToastEvent({
             title: title,
             message: message,

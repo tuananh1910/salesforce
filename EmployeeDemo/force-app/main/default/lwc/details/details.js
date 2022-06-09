@@ -24,16 +24,12 @@ const fields = [
    
 ]
 export default class Details extends LightningElement {
-    detailsEmployee;
-    @track modalContainer = false;
+    @api modalView;
+    @api recordId;
     fields = fields;
-    @api
-    openModalDetails(data){
-        this.detailsEmployee = data;
-        this.modalContainer = true;
-    }
 
     closeModalAction(){
-        this.modalContainer=false;
-      }
+        const customEvent = new CustomEvent('close');
+        this.dispatchEvent(customEvent);
+    }
 }

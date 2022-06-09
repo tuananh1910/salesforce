@@ -20,25 +20,20 @@ const fields = [
    
 ]
 export default class Edit extends LightningElement {
-    @track modalContainer = false;
-    editEmployee;
+    @api modalEdit;
+    @api recordId;
 
-    @api records;
     fields = fields;
 
-    @api
-    openModalEdit(data){
-        this.modalContainer = true;
-        this.editEmployee = data;
-    }
-
     closeModalAction(){
-        this.modalContainer=false;
+        const customEvent = new CustomEvent('close');
+        this.dispatchEvent(customEvent);
     }
     
     finish(event){
-        const customEvent = new CustomEvent('changeopen');
+        const customEvent = new CustomEvent('success');
         this.dispatchEvent(customEvent);
-        this.closeModalAction();
+        
+
     }
 }

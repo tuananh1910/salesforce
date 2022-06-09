@@ -21,6 +21,24 @@ export default class Pagination extends LightningElement {
 
     ortedBy;
 
+    @track pageSize;
+    
+    changeNumberRecordDisplay(event){
+        const field = event.target.name;
+        if (field === 'optionSelect') {
+            this.recordsperpage  = event.target.value;
+            clearTimeout(this.timeoutId);
+            this.setRecordsToDisplay();
+        }
+
+    }
+    setPageSize(){
+        this.pageSize = [];
+        for(let i=5;i<=30;i=i+5){
+            this.pageSize.push(i);
+        }
+    }
+
     @api
     setupAgainPagination(records){
         this.records = records;
@@ -29,7 +47,9 @@ export default class Pagination extends LightningElement {
 
     connectedCallback() {
         this.isLoading = true;
+        this.setPageSize();
         this.setRecordsToDisplay();
+
     }
 
     setRecordsToDisplay() { 

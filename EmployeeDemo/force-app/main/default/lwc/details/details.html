@@ -1,19 +1,19 @@
 <template>
-    <template if:true={modalContainer}>
+    <template if:true={modalView}>
         <section  class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalAction}>
                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
                     </button>
-                    <h2 class="slds-text-heading_medium slds-hyphenate">{detailsEmployee.LastName} Detail</h2>
+                    <h2 class="slds-text-heading_medium slds-hyphenate"> Details</h2>
                  </header>
 
                  <div class="slds-modal__content slds-p-around_medium">
                    <lightning-card>
                     <lightning-record-form
                     object-api-name="Employee__c"
-                    record-id={detailsEmployee.Id}
+                    record-id={recordId}
                     columns="2" 
                     fields ={fields}
                     mode="readonly"

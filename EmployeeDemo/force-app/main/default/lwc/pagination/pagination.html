@@ -32,15 +32,7 @@
                 </template>
             </lightning-button-group>
         </template>
-        <!-- <select id="numRecordOfCurrentPage" onchange={changeNumberRecordDisplay} class="slds-m-left--x-small slds-button_neutral slds-select" style="width: 100px;">
-
-            <template for:each={pageSize} for:item="size">
-
-                <option key={size} value={size}>{size} / page</option>
-
-            </template>
-
-          </select> -->
+            &nbsp;
             <lightning-button
             variant="neutral"
             title="next"
@@ -50,7 +42,7 @@
             icon-position="right"
             onclick={handleClick}
             ></lightning-button>
-            &nbsp;
+            
             <lightning-button
             variant="neutral"
             title="last"
@@ -59,8 +51,26 @@
             icon-name="utility:chevronright"
             icon-position="right"
             onclick={handleClick}
-            ></lightning-button>
+            ></lightning-button>.
             
+        </div>
+
+        &nbsp;
+        <div>
+            <select 
+            id="numRecordOfCurrentPage"
+            onchange={changeNumberRecordDisplay} 
+            class="slds-float_right slds-button_neutral slds-select" 
+            style="width: 100px;"
+            name="optionSelect">
+
+                <template for:each={pageSize} for:item="size">
+    
+                    <option key={size} value={size}>{size} / page</option>
+    
+                </template>
+    
+                </select>
         </div>
     </div>
     <div class="slds-m-top_small"></div>

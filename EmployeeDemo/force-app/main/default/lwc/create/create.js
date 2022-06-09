@@ -20,20 +20,18 @@ const fields = [
    
 ]
 export default class Create extends LightningElement {
-    @track modalContainer = false;
+    @api modalCreate;
     fields = fields;
 
-    @api
-    openModalCreate(){
-        this.modalContainer = true;
-    }
+   
 
     closeModalAction(){
-        this.modalContainer=false;
+        const customEvent = new CustomEvent('close');
+        this.dispatchEvent(customEvent);
     }
     
     finish(){
-        const customEvent = new CustomEvent('changeopen');
+        const customEvent = new CustomEvent('success');
         this.dispatchEvent(customEvent);
     }
 

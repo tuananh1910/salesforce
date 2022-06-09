@@ -1,5 +1,5 @@
 <template>
-    <template if:true={modalContainer}>
+    <template if:true={modalEdit}>
         <p>Edit</p>
         <section  class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
@@ -14,9 +14,8 @@
                    <lightning-card>
                         <lightning-record-form 
                             object-api-name="Employee__c"
-                            record-id={editEmployee.Id}
+                            record-id={recordId}
                             mode="edit"
-                           
                             oncancel={closeModalAction}
                             onsuccess={finish}
                             columns="2"
