@@ -7,16 +7,16 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 const COLUMNS = [
-    {label: 'FirstName',fieldName: 'FirstName__c', type : 'text',sortable: true, editable: true},
-    {label: 'LastName',fieldName: 'LastName__c', type : 'text', sortable: true, editable: true},
+    {label: 'FirstName',fieldName: 'FirstName__c', type : 'text'},
+    {label: 'LastName',fieldName: 'LastName__c', type : 'text'},
     {label: 'FullName',fieldName: 'FullName__c', type : 'text', sortable: true},
-    {label: 'Age',fieldName: 'Age__c', type : 'text', sortable: true},
+    {label: 'Age',fieldName: 'Age__c', type : 'text'},
     {label: 'Certifications',fieldName: 'Certifications__c', type : 'checkbox'},
     {label: 'DateOfBirth',fieldName: 'Date_of_Birth__c', type : 'text'},
     {label: 'Email',fieldName: 'Email__c', type : 'text'},
     {label: 'Experience',fieldName: 'Experience__c', type : 'text'},
     {label: 'PhoneNumber',fieldName: 'Phone_number__c', type : 'text'},
-    {label: 'Position',fieldName: 'Position__c', type : 'checkbox', sortable: true},
+    {label: 'Position',fieldName: 'Position__c', type : 'checkbox'},
     {
         label: 'View',
         type: 'button-icon',
@@ -204,8 +204,6 @@ export default class List extends LightningElement {
         this.refreshRecords();
     }
 
-
-    
 
     closeEdit(){
         this.modalEdit = false;

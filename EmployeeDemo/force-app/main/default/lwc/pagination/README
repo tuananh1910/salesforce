@@ -5,3 +5,7 @@ FIND :term IN ALL FIELDS
 RETURNING Lead(Name, Company WHERE Name LIKE :filter OR Company LIKE :filter)...
 
 https://www.youtube.com/watch?v=o3L8Pbt8Xyk
+
+
+IF( NOT( ISBLANK( Birthdate ) ) ,
+IF( DATE( YEAR(bd) , MONTH( Birthdate ) , DAY( Birthdate ) ) <= DATE( YEAR(today) , MONTH( TODAY() ) , DAY( TODAY() ) ),YEAR (Today()) - YEAR ( Birthdate ),     YEAR (Today()) - YEAR ( Birthdate ) -1 ), null)
