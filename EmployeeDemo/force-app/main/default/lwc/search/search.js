@@ -39,7 +39,8 @@ export default class Search extends LightningElement {
                     this.dispatchEvent(search);   
                     
                 });
-        } else {
+        } 
+        else {
             // fire toast event if input field is blank
             const event = new ShowToastEvent({
                 variant: 'error',

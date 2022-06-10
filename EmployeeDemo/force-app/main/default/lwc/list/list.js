@@ -53,8 +53,6 @@ const COLUMNS = [
     }
 ]
 export default class List extends LightningElement {
-    // totalEmployee;
-
     @track showDeleteMultiRecordButton = false;
     columns = COLUMNS;
     error = false;
@@ -63,7 +61,7 @@ export default class List extends LightningElement {
 
     @track records;
     @track errors;
-    @track recordsToDisplay;
+    recordsToDisplay;
     @track draftValues = [];
 
     listIdSelected;
@@ -76,10 +74,6 @@ export default class List extends LightningElement {
     modalView = false;
     modalCreate = false;
     recordId;
-
-    // updateEmployeeHandler(event){
-    //     this.records 
-    // }
 
     handlePagination(event){
         console.log('paginating');
@@ -151,7 +145,7 @@ export default class List extends LightningElement {
         for (let i = 0 ; i<data.length;i++){
             console.log('id ? : ',data[i]);
             deleteRecord(data[i]).then(result => {
-                refreshApex(this.wiredEmployeeList);
+                this.refreshRecords();
             })
             .catch(error => {
                 console.log('error');
@@ -160,8 +154,6 @@ export default class List extends LightningElement {
         }
         return this.isDeletedRecords;
     }
-
-    
 
 
     handleRowActions(event){
@@ -193,7 +185,7 @@ export default class List extends LightningElement {
                     this.showToast(
                     fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
                 }
-                refreshApex(this.wiredEmployeeList);
+                this.refreshRecords();
             })
             .catch(error => {
                 console.log(error);
@@ -214,9 +206,12 @@ export default class List extends LightningElement {
         fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
 
         this.modalEdit = false;
-        refreshApex(this.wiredEmployeeList);
-        this.template.querySelector('c-pagination').setRecordsToDisplay();
+        this.refreshRecords();
     }
+
+
+    
+
     closeEdit(){
         this.modalEdit = false;
     }
@@ -241,7 +236,7 @@ export default class List extends LightningElement {
         this.showToast(
         fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
        this.modalCreate = false;
-       refreshApex(this.wiredEmployeeList);
+       this.refreshRecords();
     }
     closeCreate(){
         this.modalCreate = false;
@@ -266,6 +261,7 @@ export default class List extends LightningElement {
         this.sortDirection = sortDirection;
         this.sortedBy = sortedBy;
     }
+
     sortBy( field, reverse, primer ) {
 
         const key = primer
@@ -309,5 +305,16 @@ export default class List extends LightningElement {
         })
     }
 
+    async refreshRecords(){
+        let promise = await refreshApex(this.wiredEmployeeList);
+        Promise.all(promise).then(record => {
+            
+        }).catch(error => {
+            
+        }).finally(()=>{
+            console.log("edit data : ",JSON.stringify(this.records));
+            this.template.querySelector('c-pagination').setupAgainPagination(this.records);
+        })
+    }
     
 }
