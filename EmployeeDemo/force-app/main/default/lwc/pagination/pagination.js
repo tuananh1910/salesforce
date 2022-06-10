@@ -113,8 +113,6 @@ export default class Pagination extends LightningElement {
 
     preparePaginationList() {
         this.isLoading = true;
-        console.log('recordsToDisplay');
-        console.log(JSON.stringify(this.records));
         let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
         let end = parseInt(begin) + parseInt(this.recordsperpage);
 

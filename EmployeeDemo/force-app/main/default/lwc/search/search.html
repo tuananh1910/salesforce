@@ -3,20 +3,23 @@
     <div class="slds-m-around_medium">
       
       <div class="slds-m-bottom_small">
-          <lightning-input type="search"
-             value={searchValue}
-             label="Employee Name"
-             onchange={searchKeyword}
-             >
-            </lightning-input>
+         <div class="search"> 
             
-           
-       </div>
-       <div class ="search-btn">
-       <lightning-button label="Search"
+            <lightning-input type="search"
+            value={searchValue}
+            placeholder="Enter employee's name"
+            onchange={searchKeyword}
+            class="search-input"
+         
+            >
+           </lightning-input>  
+           <lightning-button label="Search"
             onclick={handleSearchKeyword}
             variant="brand"
+            class="search-btn"
             ></lightning-button>
          </div>
+       </div>
+      
     </div>
  </template>

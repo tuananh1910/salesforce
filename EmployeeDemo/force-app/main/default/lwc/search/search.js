@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import searchEmployee from '@salesforce/apex/EmployeeController.searchEmployee'
 import {ShowToastEvent} from 'lightning/platformShowToastEvent'
+import bootstrap from '@salesforce/resourceUrl/bootstrap';
 
 export default class Search extends LightningElement {
     searchValue = '';

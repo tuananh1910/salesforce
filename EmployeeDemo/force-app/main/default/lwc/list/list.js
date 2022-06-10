@@ -33,22 +33,21 @@ const COLUMNS = [
     {
         label:'Edit',type: "button", 
         typeAttributes: {
-            label: 'Edit',
+            iconName: 'action:edit',
             name: 'edit',
             title: 'Edit',
             value: 'edit',
-            iconPosition: 'left',
+            iconPosition: 'center',
         }
     },
     {
         label:'Delete',type: "button", 
         typeAttributes: {
-            label: 'Delete',
+            iconName: 'action:delete',
             name: 'delete',
             title: 'Delete',
-            disabled: false,
             value: 'Delete',
-            iconPosition: 'left'
+            iconPosition: 'center'
         }
     }
 ]
@@ -76,7 +75,6 @@ export default class List extends LightningElement {
     recordId;
 
     handlePagination(event){
-        console.log('paginating');
         this.recordsToDisplay = event.detail.records;
     } 
 
@@ -91,7 +89,6 @@ export default class List extends LightningElement {
         this.wiredEmployeeList = response;
         if(response.data){
             this.records = response.data;
-            console.log("wire data : ",JSON.stringify(this.records));
             this.errors = undefined;
             this.showTable = true;
         }else if(response.error){
@@ -143,12 +140,10 @@ export default class List extends LightningElement {
     handleDeletes(data){
         console.log('handle deletes',JSON.stringify(data));
         for (let i = 0 ; i<data.length;i++){
-            console.log('id ? : ',data[i]);
             deleteRecord(data[i]).then(result => {
                 this.refreshRecords();
             })
             .catch(error => {
-                console.log('error');
                 this.isDeletedRecords  = false;
             });
         }
@@ -312,7 +307,6 @@ export default class List extends LightningElement {
         }).catch(error => {
             
         }).finally(()=>{
-            console.log("edit data : ",JSON.stringify(this.records));
             this.template.querySelector('c-pagination').setupAgainPagination(this.records);
         })
     }
