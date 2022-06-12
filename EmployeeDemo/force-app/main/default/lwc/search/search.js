@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import searchEmployee from '@salesforce/apex/EmployeeController.searchEmployee'
 import {ShowToastEvent} from 'lightning/platformShowToastEvent'
+import bootstrap from '@salesforce/resourceUrl/bootstrap';
 
 export default class Search extends LightningElement {
     searchValue = '';
@@ -39,7 +40,8 @@ export default class Search extends LightningElement {
                     this.dispatchEvent(search);   
                     
                 });
-        } else {
+        } 
+        else {
             // fire toast event if input field is blank
             const event = new ShowToastEvent({
                 variant: 'error',

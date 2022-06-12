@@ -1,8 +1,4 @@
 import { LightningElement, api, track } from 'lwc';
-import { updateRecord } from 'lightning/uiRecordApi';
-import { refreshApex } from '@salesforce/apex';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
 const DELAY = 300;
 export default class Pagination extends LightningElement {
     alwaysFalse = false;
@@ -31,7 +27,7 @@ export default class Pagination extends LightningElement {
         }
 
     }
-    setPageSize(){
+    setRecordsPerPage(){
         this.pageSize = [];
         for(let i=5;i<=30;i=i+5){
             this.pageSize.push(i);
@@ -46,12 +42,23 @@ export default class Pagination extends LightningElement {
 
     connectedCallback() {
         this.isLoading = true;
-        this.setPageSize();
+        this.setRecordsPerPage();
         this.setRecordsToDisplay();
 
     }
+
+    // page link : total pages
+    // display page link : 5 no page .... 4 5 6 7 8 ....
+    // check no page link current : ex : is 8 
+    // display slice pageLinks beign: 8-2 and end: 8+2
+    // @track 1 variable pageLinksToDisplay store 45678 -> onchange 
+    // page no 1 then push 2345
+    // pageLinksToDisplay=[];
+    // setPageLinksToDisplay(){
+        
+    // }
     
-    @api
+    
     setRecordsToDisplay() { 
         this.clearAllPageLinks();
         this.totalRecords = this.records.length;
@@ -104,22 +111,8 @@ export default class Pagination extends LightningElement {
         this.preparePaginationList();
     }
 
-    // @api
-    // get recordsToDisplay() {
-    //     console.log('recordsToDisplay');
-    //     let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
-    //     let end = parseInt(begin) + parseInt(this.recordsperpage);
-
-    //     this.startRecord = begin + parseInt(1);
-    //     this.endRecord = end > this.totalRecords ? this.totalRecords : end;
-    //     this.end = end > this.totalRecords ? true : false;
-    //     return this.records.slice(begin, end);
-    // }
-
     preparePaginationList() {
         this.isLoading = true;
-        console.log('recordsToDisplay');
-        console.log(JSON.stringify(this.records));
         let begin = (this.pageNo - 1) * parseInt(this.recordsperpage);
         let end = parseInt(begin) + parseInt(this.recordsperpage);
 

@@ -7,16 +7,16 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 const COLUMNS = [
-    {label: 'FirstName',fieldName: 'FirstName__c', type : 'text',sortable: true, editable: true},
-    {label: 'LastName',fieldName: 'LastName__c', type : 'text', sortable: true, editable: true},
+    {label: 'FirstName',fieldName: 'FirstName__c', type : 'text'},
+    {label: 'LastName',fieldName: 'LastName__c', type : 'text'},
     {label: 'FullName',fieldName: 'FullName__c', type : 'text', sortable: true},
-    {label: 'Age',fieldName: 'Age__c', type : 'text', sortable: true},
+    {label: 'Age',fieldName: 'Age__c', type : 'text'},
     {label: 'Certifications',fieldName: 'Certifications__c', type : 'checkbox'},
     {label: 'DateOfBirth',fieldName: 'Date_of_Birth__c', type : 'text'},
     {label: 'Email',fieldName: 'Email__c', type : 'text'},
     {label: 'Experience',fieldName: 'Experience__c', type : 'text'},
     {label: 'PhoneNumber',fieldName: 'Phone_number__c', type : 'text'},
-    {label: 'Position',fieldName: 'Position__c', type : 'checkbox', sortable: true},
+    {label: 'Position',fieldName: 'Position__c', type : 'checkbox'},
     {
         label: 'View',
         type: 'button-icon',
@@ -33,28 +33,25 @@ const COLUMNS = [
     {
         label:'Edit',type: "button", 
         typeAttributes: {
-            label: 'Edit',
+            iconName: 'action:edit',
             name: 'edit',
             title: 'Edit',
             value: 'edit',
-            iconPosition: 'left',
+            iconPosition: 'center',
         }
     },
     {
         label:'Delete',type: "button", 
         typeAttributes: {
-            label: 'Delete',
+            iconName: 'action:delete',
             name: 'delete',
             title: 'Delete',
-            disabled: false,
             value: 'Delete',
-            iconPosition: 'left'
+            iconPosition: 'center'
         }
     }
 ]
 export default class List extends LightningElement {
-    // totalEmployee;
-
     @track showDeleteMultiRecordButton = false;
     columns = COLUMNS;
     error = false;
@@ -63,10 +60,10 @@ export default class List extends LightningElement {
 
     @track records;
     @track errors;
-    @track recordsToDisplay;
+    recordsToDisplay;
     @track draftValues = [];
 
-    listIdSelected;
+    listIdSelected=[];
 
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
@@ -77,12 +74,7 @@ export default class List extends LightningElement {
     modalCreate = false;
     recordId;
 
-    // updateEmployeeHandler(event){
-    //     this.records 
-    // }
-
     handlePagination(event){
-        console.log('paginating');
         this.recordsToDisplay = event.detail.records;
     } 
 
@@ -97,7 +89,6 @@ export default class List extends LightningElement {
         this.wiredEmployeeList = response;
         if(response.data){
             this.records = response.data;
-            console.log("wire data : ",JSON.stringify(this.records));
             this.errors = undefined;
             this.showTable = true;
         }else if(response.error){
@@ -110,6 +101,9 @@ export default class List extends LightningElement {
     
     handleSelected(event){
         const selectedRows = event.detail.selectedRows;
+        // if(selectedRows==null){
+        //     this.listIdSelected = [];
+        // }
         this.listIdSelected = [];
         for (let i = 0; i < selectedRows.length; i++) {
             this.listIdSelected.push(selectedRows[i].Id)
@@ -120,6 +114,8 @@ export default class List extends LightningElement {
           } else {
               this.showDeleteMultiRecordButton = false;
           }
+        
+        console.log(JSON.stringify(this.listIdSelected));
     }
     async confirmDeletes(){
         let messageDelete ="Are you sure you want to delete these Employees?";
@@ -149,19 +145,15 @@ export default class List extends LightningElement {
     handleDeletes(data){
         console.log('handle deletes',JSON.stringify(data));
         for (let i = 0 ; i<data.length;i++){
-            console.log('id ? : ',data[i]);
             deleteRecord(data[i]).then(result => {
-                refreshApex(this.wiredEmployeeList);
+                this.refreshRecords();
             })
             .catch(error => {
-                console.log('error');
                 this.isDeletedRecords  = false;
             });
         }
         return this.isDeletedRecords;
     }
-
-    
 
 
     handleRowActions(event){
@@ -193,7 +185,7 @@ export default class List extends LightningElement {
                     this.showToast(
                     fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
                 }
-                refreshApex(this.wiredEmployeeList);
+                this.refreshRecords();
             })
             .catch(error => {
                 console.log(error);
@@ -214,9 +206,10 @@ export default class List extends LightningElement {
         fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
 
         this.modalEdit = false;
-        refreshApex(this.wiredEmployeeList);
-        this.template.querySelector('c-pagination').setRecordsToDisplay();
+        this.refreshRecords();
     }
+
+
     closeEdit(){
         this.modalEdit = false;
     }
@@ -241,7 +234,7 @@ export default class List extends LightningElement {
         this.showToast(
         fieldToast.title, fieldToast.message, fieldToast.variant, fieldToast.mode);
        this.modalCreate = false;
-       refreshApex(this.wiredEmployeeList);
+       this.refreshRecords();
     }
     closeCreate(){
         this.modalCreate = false;
@@ -266,6 +259,7 @@ export default class List extends LightningElement {
         this.sortDirection = sortDirection;
         this.sortedBy = sortedBy;
     }
+
     sortBy( field, reverse, primer ) {
 
         const key = primer
@@ -309,5 +303,15 @@ export default class List extends LightningElement {
         })
     }
 
+    async refreshRecords(){
+        let promise = await refreshApex(this.wiredEmployeeList);
+        Promise.all(promise).then(record => {
+            
+        }).catch(error => {
+            
+        }).finally(()=>{
+            this.template.querySelector('c-pagination').setupAgainPagination(this.records);
+        })
+    }
     
 }
