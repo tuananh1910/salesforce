@@ -3,3 +3,6 @@ https://pantherschools.com/how-to-implement-pagination-in-lightning-web-componen
 
 FIND :term IN ALL FIELDS
 RETURNING Lead(Name, Company WHERE Name LIKE :filter OR Company LIKE :filter)...
+
+
+https://ltanh10-2022-developer-edition.ap26.force.com/manager/s/
