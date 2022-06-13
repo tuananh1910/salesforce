@@ -16,7 +16,7 @@ export default class Pagination extends LightningElement {
 
     ortedBy;
 
-    @track pageSize;
+    pageSize;
     
     changeNumberRecordDisplay(event){
         const field = event.target.name;
@@ -25,11 +25,10 @@ export default class Pagination extends LightningElement {
             clearTimeout(this.timeoutId);
             this.setRecordsToDisplay();
         }
-
     }
     setRecordsPerPage(){
         this.pageSize = [];
-        for(let i=5;i<=30;i=i+5){
+        for(let i=5;i<=50;i=i+5){
             this.pageSize.push(i);
         }
     }

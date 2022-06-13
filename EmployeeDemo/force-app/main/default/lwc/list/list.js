@@ -7,16 +7,16 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 const COLUMNS = [
-    {label: 'FirstName',fieldName: 'FirstName__c', type : 'text'},
-    {label: 'LastName',fieldName: 'LastName__c', type : 'text'},
-    {label: 'FullName',fieldName: 'FullName__c', type : 'text', sortable: true},
-    {label: 'Age',fieldName: 'Age__c', type : 'text'},
-    {label: 'Certifications',fieldName: 'Certifications__c', type : 'checkbox'},
-    {label: 'DateOfBirth',fieldName: 'Date_of_Birth__c', type : 'text'},
-    {label: 'Email',fieldName: 'Email__c', type : 'text'},
-    {label: 'Experience',fieldName: 'Experience__c', type : 'text'},
-    {label: 'PhoneNumber',fieldName: 'Phone_number__c', type : 'text'},
-    {label: 'Position',fieldName: 'Position__c', type : 'checkbox'},
+    {label: 'First Name',fieldName: 'FirstName__c', type : 'text',  clipText: true},
+    {label: 'Last Name',fieldName: 'LastName__c', type : 'text',clipText: true},
+    {label: 'Full Name',fieldName: 'FullName__c', type : 'text', sortable: true},
+    {label: 'Age',fieldName: 'Age__c', type : 'text',clipText: true},
+    {label: 'Certifications',fieldName: 'Certifications__c', type : 'text',clipText: true},
+    {label: 'Date Of Birth',fieldName: 'Date_of_Birth__c', type : 'date',clipText: true},
+    {label: 'Email',fieldName: 'Email__c', type : 'text',clipText: true},
+    {label: 'Experience',fieldName: 'Experience__c', type : 'number',clipText: true},
+    {label: 'Phone Number',fieldName: 'Phone_number__c', type : 'text',clipText: true},
+    {label: 'Position',fieldName: 'Position__c', type : 'text',clipText: true},
     {
         label: 'View',
         type: 'button-icon',
@@ -52,16 +52,15 @@ const COLUMNS = [
     }
 ]
 export default class List extends LightningElement {
-    @track showDeleteMultiRecordButton = false;
+    showDeleteMultiRecordButton = false;
     columns = COLUMNS;
     error = false;
     wiredEmployeeList;
-    @track showTable = false;
+    showTable = false;
 
-    @track records;
-    @track errors;
+    records;
+    errors;
     recordsToDisplay;
-    @track draftValues = [];
 
     listIdSelected=[];
 
@@ -253,20 +252,24 @@ export default class List extends LightningElement {
 
     onHandleSort(event) {
         const { fieldName: sortedBy, sortDirection } = event.detail;
-        const cloneData = [...this.recordsToDisplay];
+        const cloneData = [...this.records];
         cloneData.sort(this.sortBy(sortedBy, sortDirection === 'asc' ? 1 : -1));
-        this.recordsToDisplay = cloneData;
+        // this.recordsToDisplay = cloneData;
+        this.records = cloneData;
+        this.refreshRecords();
+
         this.sortDirection = sortDirection;
         this.sortedBy = sortedBy;
     }
 
     sortBy( field, reverse, primer ) {
-
         const key = primer
         ? function( x ) {
+
             return primer(x[field]);
         }
         : function( x ) {
+
             return x[field];
         };
 
@@ -275,32 +278,6 @@ export default class List extends LightningElement {
             b = key(b);
             return reverse * ( ( a > b ) - ( b > a ) );
         };
-    }
-
-    handleSave(event) {
-        this.isLoading = true;
-        const recordInputs =  event.detail.draftValues.slice().map(draft => {
-            const fields = Object.assign({}, draft);
-            return { fields };
-        });
-        const promises = recordInputs.map(recordInput => updateRecord(recordInput));
-        Promise.all(promises).then(record => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'All Records updated',
-                    variant: 'success'
-                })
-            );
-            this.draftValues = [];
-            eval("$A.get('e.force:refreshView').fire();");
-            return refreshApex(this.wiredEmployeeList);
-        }).catch(error => {
-            window.console.error(' error **** \n '+error);
-        })
-        .finally(()=>{
-            this.isLoading = false;
-        })
     }
 
     async refreshRecords(){
